@@ -87,4 +87,22 @@ def create_kra_progress(db: Session, progress: schemas.KRAProgressCreate):
     db.add(db_progress)
     db.commit()
     db.refresh(db_progress)
+    db.refresh(db_progress)
     return db_progress
+
+# Message CRUD
+
+def create_message(db: Session, message: schemas.MessageCreate, sender_id: int):
+    db_message = models.Message(
+        content=message.content,
+        room=message.room,
+        sender_id=sender_id
+    )
+    db.add(db_message)
+    db.commit()
+    db.refresh(db_message)
+    return db_message
+
+def get_messages(db: Session, room: str = "general", limit: int = 50):
+    return db.query(models.Message).filter(models.Message.room == room).order_by(models.Message.timestamp.asc()).limit(limit).all()
+

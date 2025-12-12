@@ -100,3 +100,19 @@ class KRAProgressRead(KRAProgressBase):
 
     class Config:
         orm_mode = True
+
+class MessageBase(BaseModel):
+    content: str
+    room: str = "general"
+
+class MessageCreate(MessageBase):
+    pass
+
+class MessageRead(MessageBase):
+    id: int
+    sender_id: int
+    timestamp: datetime
+
+    class Config:
+        orm_mode = True
+

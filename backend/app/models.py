@@ -65,3 +65,15 @@ class KRAProgress(Base):
     value = Column(Float, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
     kra = relationship("KRA", back_populates="progresses")
+
+class Message(Base):
+    __tablename__ = "messages"
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(Text, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    sender_id = Column(Integer, ForeignKey("users.id"))
+    # In a full app, we'd have a 'room_id' or similar. For now, assume global room or room string.
+    room = Column(String, default="general")
+    
+    sender = relationship("User") # simple relationship
+
