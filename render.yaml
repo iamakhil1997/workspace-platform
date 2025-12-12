@@ -1,0 +1,44 @@
+services:
+  # Backend Service (FastAPI)
+  - type: web
+    name: workspace-backend
+    env: docker
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    hostHeader: workspace-backend
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: workspace-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "60"
+      - key: ALGORITHM
+        value: "HS256"
+
+  # Frontend Service (Next.js)
+  - type: web
+    name: workspace-frontend
+    env: docker
+    dockerContext: ./frontend
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: workspace-backend
+          property: url
+      - key: NEXT_PUBLIC_WS_URL
+        fromService:
+          type: web
+          name: workspace-backend
+          property: url
+
+databases:
+  - name: workspace-db
+    databaseName: workspace_db
+    user: workspace_user
+    plan: free

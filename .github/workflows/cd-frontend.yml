@@ -1,0 +1,43 @@
+# .github/workflows/cd-frontend.yml
+name: CD - Deploy Frontend to Cloud Run
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          export_default_credentials: true
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/workspace-repo/frontend:${{ github.sha }}
+
+      - name: Deploy Frontend to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ secrets.CLOUD_RUN_FRONTEND_SERVICE_NAME }}
+          image: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/workspace-repo/frontend:${{ github.sha }}
+          region: ${{ secrets.GCP_REGION }}
+          env_vars: |
+            NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_URL }}
+            NEXT_PUBLIC_WS_URL=${{ secrets.BACKEND_WS_URL }}

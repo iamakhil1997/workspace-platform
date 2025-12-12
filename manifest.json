@@ -1,0 +1,136 @@
+{
+    "files": [
+        {
+            "path": "backend/app/__init__.py",
+            "description": "Make app package importable"
+        },
+        {
+            "path": "backend/app/main.py",
+            "description": "FastAPI entry point, routers, health, WebSocket"
+        },
+        {
+            "path": "backend/app/config.py",
+            "description": "Pydantic settings loaded from .env"
+        },
+        {
+            "path": "backend/app/db.py",
+            "description": "SQLAlchemy engine, session, Base, get_db"
+        },
+        {
+            "path": "backend/app/models.py",
+            "description": "ORM models for Company, User, Project, Task, KRA, KRAProgress"
+        },
+        {
+            "path": "backend/app/schemas.py",
+            "description": "Pydantic request/response schemas"
+        },
+        {
+            "path": "backend/app/crud.py",
+            "description": "Basic CRUD helper functions"
+        },
+        {
+            "path": "backend/app/api/v1/auth.py",
+            "description": "Register and login endpoints with JWT"
+        },
+        {
+            "path": "backend/app/api/v1/users.py",
+            "description": "/me and /{user_id} user endpoints"
+        },
+        {
+            "path": "backend/app/api/v1/chat.py",
+            "description": "Placeholder chat rooms list"
+        },
+        {
+            "path": "backend/app/api/v1/projects.py",
+            "description": "Project create and list endpoints"
+        },
+        {
+            "path": "backend/app/api/v1/tasks.py",
+            "description": "Task create and list endpoints"
+        },
+        {
+            "path": "backend/app/api/v1/kra.py",
+            "description": "KRA create and summary endpoint"
+        },
+        {
+            "path": "backend/requirements.txt",
+            "description": "Python dependencies"
+        },
+        {
+            "path": "backend/Dockerfile",
+            "description": "Dockerfile for FastAPI backend"
+        },
+        {
+            "path": "backend/alembic.ini",
+            "description": "Alembic configuration"
+        },
+        {
+            "path": "frontend/package.json",
+            "description": "NPM dependencies and scripts"
+        },
+        {
+            "path": "frontend/next.config.js",
+            "description": "Next.js configuration"
+        },
+        {
+            "path": "frontend/Dockerfile",
+            "description": "Build and serve Next.js with Nginx"
+        },
+        {
+            "path": "frontend/pages/index.js",
+            "description": "Landing page with glassmorphism UI"
+        },
+        {
+            "path": "frontend/pages/auth/login.js",
+            "description": "Login form storing JWT"
+        },
+        {
+            "path": "frontend/pages/dashboard.js",
+            "description": "Dashboard with navigation links"
+        },
+        {
+            "path": "frontend/pages/chat.js",
+            "description": "Chat page using ChatClient component"
+        },
+        {
+            "path": "frontend/pages/projects.js",
+            "description": "Projects page fetching project list"
+        },
+        {
+            "path": "frontend/components/ChatClient.jsx",
+            "description": "WebSocket chat client component"
+        },
+        {
+            "path": "infra/docker-compose.yml",
+            "description": "Docker Compose stack for local dev"
+        },
+        {
+            "path": ".github/workflows/ci.yml",
+            "description": "CI pipeline: lint, test, build"
+        },
+        {
+            "path": ".github/workflows/cd-cloudrun.yml",
+            "description": "CD pipeline: build backend image, deploy to Cloud Run"
+        },
+        {
+            "path": ".env.example",
+            "description": "Example environment variables (no secrets)"
+        },
+        {
+            "path": "backend/tests/test_auth.py",
+            "description": "Pytest for authentication endpoints"
+        },
+        {
+            "path": "README.md",
+            "description": "Project documentation and deployment guide"
+        },
+        {
+            "path": ".gitignore",
+            "description": "Ignore caches, env files, node_modules, etc."
+        },
+        {
+            "path": "manifest.json",
+            "description": "Machine‑readable list of repository files"
+        }
+    ]
+}
