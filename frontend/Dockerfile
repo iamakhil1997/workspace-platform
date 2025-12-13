@@ -21,5 +21,5 @@ COPY --from=builder /app/node_modules ./node_modules
 EXPOSE 3000
 
 # Start Next.js on the port defined by PORT env var (Render sets this)
-ENV HOSTNAME="0.0.0.0"
-CMD npx next start -H 0.0.0.0 -p $PORT
+# Start Next.js (automatically detects PORT env var)
+CMD ["npm", "start"]
