@@ -8,10 +8,6 @@ services:
     healthCheckPath: /health
     hostHeader: workspace-backend
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: workspace-db
-          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
@@ -36,9 +32,3 @@ services:
           type: web
           name: workspace-backend
           property: url
-
-databases:
-  - name: workspace-db
-    databaseName: workspace_db
-    user: workspace_user
-    plan: free
