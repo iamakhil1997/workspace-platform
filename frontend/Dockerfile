@@ -4,7 +4,8 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package.json .
 COPY . .
-RUN npm install && npm run build
+# Remove any local node_modules copied from Windows to prevent binary incompatibility
+RUN rm -rf node_modules package-lock.json && npm install && npm run build
 
 # Production stage
 # Production stage - Run Next.js server directly
