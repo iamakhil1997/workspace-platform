@@ -6,7 +6,6 @@ services:
     dockerContext: ./backend
     plan: free
     healthCheckPath: /health
-    hostHeader: workspace-backend
     envVars:
       - key: SECRET_KEY
         generateValue: true
