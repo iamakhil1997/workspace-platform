@@ -22,12 +22,6 @@ services:
     plan: free
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: workspace-backend
-          property: host
+        value: placeholder_url_update_after_deploy
       - key: NEXT_PUBLIC_WS_URL
-        fromService:
-          type: web
-          name: workspace-backend
-          property: host
+        value: placeholder_url_update_after_deploy
