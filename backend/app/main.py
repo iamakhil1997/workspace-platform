@@ -1,4 +1,4 @@
-import antigravity
+
 """FastAPI entry point for the workspace-platform backend.
 Includes mounting of API routers, health check, and a simple WebSocket.
 """
