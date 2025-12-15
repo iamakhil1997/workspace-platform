@@ -9,7 +9,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     DATABASE_URL: str = Field(default="sqlite:///./test.db", env="DATABASE_URL")
-    SECRET_KEY: str = Field(..., env="SECRET_KEY")
+    SECRET_KEY: str = Field(default="temporary_secret_key_change_me", env="SECRET_KEY")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     ALGORITHM: str = "HS256"
     # Add more settings as needed
