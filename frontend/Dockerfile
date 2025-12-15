@@ -1,5 +1,6 @@
 # Stage 1: Builder
-FROM node:20-alpine AS builder
+# Use Debian slim instead of Alpine for better stability/compatibility
+FROM node:20-slim AS builder
 WORKDIR /app
 
 # Disable source maps to save memory during build (crucial for free tier)
@@ -14,7 +15,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Production Runner
-FROM node:20-alpine AS runner
+FROM node:20-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
