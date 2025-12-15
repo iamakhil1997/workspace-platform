@@ -10,8 +10,6 @@ COPY package.json ./
 RUN npm install
 
 COPY . .
-# Clean up any local node_modules copied from Windows
-RUN rm -rf node_modules
 # Build the application
 RUN npm run build
 

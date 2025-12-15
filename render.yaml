@@ -18,8 +18,7 @@ services:
   - type: web
     name: workspace-frontend
     env: docker
-    dockerContext: .
-    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
     plan: free
     envVars:
       - key: NEXT_PUBLIC_API_URL
