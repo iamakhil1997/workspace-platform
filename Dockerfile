@@ -6,16 +6,16 @@ WORKDIR /app
 # Disable source maps
 ENV GENERATE_SOURCEMAP=false
 
-# Copy Frontend Package Files (Adjusted path for Root Context)
-COPY frontend/package.json ./
+# Copy Frontend Source Code (including package.json)
+COPY frontend/ ./
+
+# 1. Clean any local artifacts
+RUN rm -rf node_modules .next package-lock.json
+
+# 2. Install dependencies (Clean Slate)
 RUN npm install
 
-# Copy Frontend Source Code
-COPY frontend/ ./
-# Explicitly nuke potential Windows artifacts to guarantee Linux-only build
-RUN rm -rf node_modules .next
-
-# Build
+# 3. Build
 RUN npm run build
 
 # Stage 2: Runner
