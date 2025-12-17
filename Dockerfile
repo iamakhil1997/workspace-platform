@@ -12,6 +12,8 @@ RUN npm install
 
 # Copy Frontend Source Code
 COPY frontend/ ./
+# Explicitly nuke potential Windows artifacts to guarantee Linux-only build
+RUN rm -rf node_modules .next
 
 # Build
 RUN npm run build
@@ -23,11 +25,11 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV HOSTNAME="0.0.0.0"
 
+# Copy standalone build (much smaller, includes dependencies)
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 3000
-
-CMD npx next start -H 0.0.0.0 -p $PORT
+# Standalone mode runs server.js
+CMD ["node", "server.js"]
