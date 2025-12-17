@@ -9,8 +9,9 @@ const nextConfig = {
         ignoreBuildErrors: true,
     },
     images: {
+        unoptimized: true,
         remotePatterns: [{ hostname: "**" }],
     },
-    output: "standalone",
+    output: "export",
 };
 module.exports = nextConfig;

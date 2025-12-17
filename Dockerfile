@@ -1,35 +1,22 @@
-# Root Dockerfile for Frontend Deployment
-# Use Debian slim
+# Build Stage
 FROM node:20-slim AS builder
 WORKDIR /app
-
-# Disable source maps
 ENV GENERATE_SOURCEMAP=false
 
-# Copy Frontend Source Code (including package.json)
-COPY frontend/ ./
-
-# 1. Clean any local artifacts
-RUN rm -rf node_modules .next package-lock.json
-
-# 2. Install dependencies (Clean Slate)
+COPY frontend/package.json ./
 RUN npm install
 
-# 3. Build
+COPY frontend/ ./
+# Clean and Build
+RUN rm -rf node_modules .next package-lock.json
+RUN npm install
 RUN npm run build
 
-# Stage 2: Runner
-FROM node:20-slim AS runner
-WORKDIR /app
+# Production Stage - Nginx
+FROM nginx:alpine
+# Copy the static export output to Nginx html directory
+COPY --from=builder /app/out /usr/share/nginx/html
 
-ENV NODE_ENV=production
-ENV HOSTNAME="0.0.0.0"
-
-# Copy standalone build (much smaller, includes dependencies)
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
-
-EXPOSE 3000
-# Standalone mode runs server.js
-CMD ["node", "server.js"]
+# Expose port and start Nginx
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
