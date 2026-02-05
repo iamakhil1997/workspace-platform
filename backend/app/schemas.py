@@ -232,6 +232,7 @@ class AttendanceStat(BaseModel):
     total_hours: float = 0.0
     last_seen: Optional[datetime] = None
 
+class AttendanceDashboard(BaseModel):
     stats: List[AttendanceStat]
     online_count: int
     offline_count: int
