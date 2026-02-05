@@ -11,12 +11,15 @@ SMTP_USERNAME = os.getenv("SMTP_USERNAME", "")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 
 def send_email(to_email: str, subject: str, body: str):
+    # Always log the email content for debugging/admin access so OTP is never lost
+    print(f"==========================================")
+    print(f"EMAIL TO: {to_email}")
+    print(f"SUBJECT: {subject}")
+    print(f"BODY: {body}")
+    print(f"==========================================")
+
     if not SMTP_USERNAME:
-        print(f"==========================================")
-        print(f"MOCK EMAIL TO: {to_email}")
-        print(f"SUBJECT: {subject}")
-        print(f"BODY: {body}")
-        print(f"==========================================")
+        print("MOCK MODE: No SMTP credentials provided.")
         return True
 
     try:
