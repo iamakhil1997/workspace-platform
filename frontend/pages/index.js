@@ -19,10 +19,8 @@ export default function Home() {
                     <p className="text-lg text-white/80 mb-6">
                         Collaborate, manage projects, track performance – all in one sleek, secure application.
                     </p>
-                    <Link href="/auth/login">
-                        <a className="inline-block bg-white text-indigo-700 font-semibold px-6 py-3 rounded-full hover:bg-white/90 transition">
-                            Get Started
-                        </a>
+                    <Link href="/auth/login" className="inline-block bg-white text-indigo-700 font-semibold px-6 py-3 rounded-full hover:bg-white/90 transition">
+                        Get Started
                     </Link>
                 </section>
             </main>

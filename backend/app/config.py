@@ -4,11 +4,11 @@ Uses pydantic BaseSettings for type safety.
 """
 
 import os
-from pydantic import Field
-from pydantic_settings import BaseSettings
+from pydantic import Field, BaseSettings
+# from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = Field(default="sqlite:///./test.db", env="DATABASE_URL")
+    DATABASE_URL: str = Field(default="sqlite:///./test_v3.db", env="DATABASE_URL")
     SECRET_KEY: str = Field(default="temporary_secret_key_change_me", env="SECRET_KEY")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     ALGORITHM: str = "HS256"
