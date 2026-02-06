@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     SMTP_PORT: int = Field(default=587, env="SMTP_PORT")
     SMTP_USERNAME: str = Field(default="", env="SMTP_USERNAME")
     SMTP_PASSWORD: str = Field(default="", env="SMTP_PASSWORD")
+    SMTP_FROM_EMAIL: str = Field(default="", env="SMTP_FROM_EMAIL")
 
     class Config:
         env_file = ".env"
