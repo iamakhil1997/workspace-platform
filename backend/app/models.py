@@ -185,3 +185,17 @@ class ExitRequest(Base):
     requested_date = Column(DateTime, default=datetime.utcnow)
     last_working_day = Column(DateTime, nullable=True)
     employee = relationship("User", backref="exit_requests")
+
+class OnboardingInvite(Base):
+    __tablename__ = "onboarding_invites"
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, index=True)
+    token = Column(String, unique=True, index=True)
+    role = Column(String, default="employee")
+    full_name = Column(String, nullable=True)
+    invited_by_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, nullable=True)
+    is_used = Column(Boolean, default=False)
+    
+    invited_by = relationship("User")

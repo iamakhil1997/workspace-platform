@@ -84,7 +84,7 @@ def register(user_in: schemas.OTPVerify, db: Session = Depends(get_db)):
         
     hashed_password = get_password_hash(user_in.password)
     user_data = schemas.UserCreate(email=user_in.email, password=user_in.password, full_name=user_in.full_name)
-    return crud.create_user(db, user_data, hashed_password)
+    return crud.create_user(db, user_data, hashed_password, role=user_in.role)
 
 @router.post("/login", response_model=schemas.Token)
 def login(background_tasks: BackgroundTasks, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
@@ -97,3 +97,48 @@ def login(background_tasks: BackgroundTasks, form_data: OAuth2PasswordRequestFor
     
     access_token = create_access_token(data={"sub": str(user.id)})
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/complete-onboarding", response_model=schemas.UserRead)
+def complete_onboarding(
+    data: schemas.OnboardingComplete, 
+    db: Session = Depends(get_db)
+):
+    # Check invite
+    invite = crud.get_onboarding_invite_by_token(db, data.token)
+    if not invite:
+        raise HTTPException(status_code=400, detail="Invalid onboarding token")
+    
+    if invite.is_used:
+        raise HTTPException(status_code=400, detail="This invitation has already been used")
+        
+    if invite.expires_at and invite.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Invitation expired")
+        
+    # Check if user email already exists (safety check)
+    if crud.get_user_by_email(db, invite.email):
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    # Create User
+    hashed_password = get_password_hash(data.password)
+    
+    try:
+        db_user = models.User(
+            email=invite.email,
+            hashed_password=hashed_password,
+            full_name=invite.full_name,
+            role=invite.role,
+            is_verified=True,
+            company_id=None
+        )
+        db.add(db_user)
+        
+        # Mark invite used
+        invite.is_used = True
+        
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))

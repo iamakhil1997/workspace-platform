@@ -43,6 +43,21 @@ class UserInvite(BaseModel):
     full_name: str
     role: str = "employee"
 
+class OnboardingInviteCreate(UserInvite):
+    pass
+
+class OnboardingInviteRead(UserInvite):
+    id: int
+    token: str
+    created_at: datetime
+    is_used: bool
+    class Config:
+        orm_mode = True
+
+class OnboardingComplete(BaseModel):
+    token: str
+    password: str = Field(..., min_length=6)
+
 class TicketBase(BaseModel):
     title: str
     description: Optional[str] = None
@@ -245,3 +260,4 @@ class OTPVerify(BaseModel):
     code: str
     password: str
     full_name: str
+    role: str = "employee"

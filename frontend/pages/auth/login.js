@@ -10,9 +10,11 @@ export default function Login() {
     const { login } = useGlobal();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('employee'); // 'employee' or 'hr'
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // Check for success message from query params
+    const { onboarding, registered } = router.query;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,42 +51,20 @@ export default function Login() {
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
 
-                {/* Header with Role Toggle */}
                 <div className="px-8 pt-8 pb-6 text-center">
                     <div className="w-12 h-12 bg-indigo-600 rounded-xl mx-auto flex items-center justify-center text-white font-bold text-2xl mb-4 shadow-lg shadow-indigo-200">
                         W
                     </div>
                     <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h1>
                     <p className="text-gray-500 text-sm mb-6">Sign in to your workspace account</p>
-
-                    <div className="inline-flex bg-gray-100 p-1 rounded-xl">
-                        <button
-                            onClick={() => setRole('employee')}
-                            className={`flex items-center gap-2 px-6 py-2 rounded-lg text-sm font-medium transition-all ${role === 'employee'
-                                ? 'bg-white text-indigo-600 shadow-sm'
-                                : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                        >
-                            <User size={16} /> Employee
-                        </button>
-                        <button
-                            onClick={() => setRole('hr')}
-                            className={`flex items-center gap-2 px-6 py-2 rounded-lg text-sm font-medium transition-all ${role === 'hr'
-                                ? 'bg-white text-indigo-600 shadow-sm'
-                                : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                        >
-                            <Building size={16} /> HR / Admin
-                        </button>
-                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="px-8 pb-8 space-y-5">
-                    {/* Visual cue for HR login */}
-                    {role === 'hr' && (
-                        <div className="bg-amber-50 border border-amber-100 text-amber-800 text-xs px-4 py-3 rounded-lg flex items-start gap-2">
-                            <AlertCircle size={14} className="mt-0.5 shrink-0" />
-                            <p>You are logging in to the HR Admin portal. Access is restricted to authorized personnel.</p>
+
+                    {(onboarding === 'success' || registered === 'true') && (
+                        <div className="bg-green-50 text-green-700 text-sm p-3 rounded-lg flex items-center gap-2 border border-green-200">
+                            <CheckCircle size={16} />
+                            <span>Account created successfully! Please log in.</span>
                         </div>
                     )}
 

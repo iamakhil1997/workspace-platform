@@ -65,49 +65,33 @@ async def upload_profile_picture(
     db.refresh(current_user)
     return current_user
 
-@router.post("/invite", response_model=schemas.UserRead)
+@router.post("/invite", response_model=schemas.OnboardingInviteRead)
 def invite_user(
-    user_in: schemas.UserCreate, 
+    invite_in: schemas.OnboardingInviteCreate, 
     db: Session = Depends(get_db),
     current_user: models.User = Depends(deps.get_current_user)
 ):
     if current_user.role != "admin" and current_user.role != "hr":
          raise HTTPException(status_code=403, detail="Not authorized to invite users")
     
-    # Create user with is_verified=False
+    # Check if user already exists
+    if crud.get_user_by_email(db, invite_in.email):
+        raise HTTPException(status_code=400, detail="User with this email already exists")
+
     # Generate token
     token = secrets.token_urlsafe(32)
     
-    # Check if user exists
-    db_user = crud.get_user_by_email(db, user_in.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    # We must hash the password. Since it's an invite, maybe generate a random password or let them set it?
-    # For this flow, let's assume we set a temp password or the user_in has one.
-    from .auth import get_password_hash
-    hashed_password = get_password_hash(user_in.password)
-    
-    new_user = models.User(
-        email=user_in.email,
-        hashed_password=hashed_password,
-        full_name=user_in.full_name,
-        role="employee", # Default to employee
-        is_verified=False,
-        verification_token=token
-    )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    # Create invite
+    invite = crud.create_onboarding_invite(db, invite_in, token, current_user.id)
     
     # Mock sending email
-    print(f"------------ MOCK EMAIL ------------")
-    print(f"To: {user_in.email}")
-    print(f"Subject: Welcome to Workspace! Please verify your email.")
-    print(f"Link: http://localhost:3000/auth/verify?token={token}")
-    print(f"------------------------------------")
+    print(f"------------ ONBOARDING EMAIL ------------")
+    print(f"To: {invite.email}")
+    print(f"Subject: You are invited to join Workspace!")
+    print(f"Link: http://localhost:3000/auth/onboarding?token={token}")
+    print(f"------------------------------------------")
     
-    return new_user
+    return invite
 
 @router.post("/verify")
 def verify_email(

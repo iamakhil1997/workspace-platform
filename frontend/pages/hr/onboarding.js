@@ -24,11 +24,13 @@ export default function Onboarding() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ email, full_name: fullName, password: 'tempPassword123' }) // Temp password or random logic in backend
+                body: JSON.stringify({ email, full_name: fullName, role: 'employee' })
             });
 
             if (res.ok) {
-                setMessage({ type: 'success', text: 'Invitation sent successfully!' });
+                const data = await res.json();
+                // In a real app, email is sent. Here we might show the link for demo or just success.
+                setMessage({ type: 'success', text: `Invitation sent! Link (Dev Mode): /auth/onboarding?token=${data.token}` });
                 setEmail('');
                 setFullName('');
             } else {

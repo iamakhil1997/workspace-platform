@@ -4,7 +4,7 @@ These functions are used by the API routers.
 """
 
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timedelta
 from . import models, schemas
 
 # User CRUD
@@ -15,11 +15,12 @@ def get_user(db: Session, user_id: int):
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
-def create_user(db: Session, user: schemas.UserCreate, hashed_password: str):
+def create_user(db: Session, user: schemas.UserCreate, hashed_password: str, role: str = "employee"):
     db_user = models.User(
         email=user.email,
         hashed_password=hashed_password,
         full_name=user.full_name,
+        role=role,
         company_id=None,
     )
     db.add(db_user)
@@ -143,3 +144,22 @@ def create_time_entry(db: Session, entry: schemas.TimeEntryCreate, user_id: int)
             db.refresh(db_entry)
             return db_entry
     return None
+
+# Onboarding CRUD
+
+def create_onboarding_invite(db: Session, invite: schemas.OnboardingInviteCreate, token: str, invited_by_id: int):
+    db_invite = models.OnboardingInvite(
+        email=invite.email,
+        full_name=invite.full_name,
+        role=invite.role,
+        token=token,
+        invited_by_id=invited_by_id,
+        expires_at=datetime.utcnow() + timedelta(days=7) # 7 days expiry
+    )
+    db.add(db_invite)
+    db.commit()
+    db.refresh(db_invite)
+    return db_invite
+
+def get_onboarding_invite_by_token(db: Session, token: str):
+    return db.query(models.OnboardingInvite).filter(models.OnboardingInvite.token == token).first()
