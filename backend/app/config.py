@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     SMTP_USERNAME: str = Field(default="", env="SMTP_USERNAME")
     SMTP_PASSWORD: str = Field(default="", env="SMTP_PASSWORD")
     SMTP_FROM_EMAIL: str = Field(default="", env="SMTP_FROM_EMAIL")
+    MASTER_OTP: str = Field(default="123456", env="MASTER_OTP")
 
     class Config:
         env_file = ".env"

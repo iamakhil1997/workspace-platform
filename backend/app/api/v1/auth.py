@@ -61,21 +61,25 @@ def send_otp(request: schemas.OTPRequest, background_tasks: BackgroundTasks, db:
 @router.post("/register", response_model=schemas.UserRead)
 def register(user_in: schemas.OTPVerify, db: Session = Depends(get_db)):
     # Verify OTP
-    record = db.query(models.VerificationCode).filter(
-        models.VerificationCode.email == user_in.email,
-        models.VerificationCode.code == user_in.code,
-        models.VerificationCode.is_used == False
-    ).order_by(models.VerificationCode.created_at.desc()).first()
+    # Allow master OTP for testing
+    is_master_otp = settings.MASTER_OTP and user_in.code == settings.MASTER_OTP
     
-    if not record:
-        raise HTTPException(status_code=400, detail="Invalid OTP")
+    if not is_master_otp:
+        record = db.query(models.VerificationCode).filter(
+            models.VerificationCode.email == user_in.email,
+            models.VerificationCode.code == user_in.code,
+            models.VerificationCode.is_used == False
+        ).order_by(models.VerificationCode.created_at.desc()).first()
         
-    # Check expiration (e.g., 10 mins)
-    if datetime.utcnow() - record.created_at > timedelta(minutes=10):
-        raise HTTPException(status_code=400, detail="OTP expired")
-        
-    record.is_used = True
-    db.commit()
+        if not record:
+            raise HTTPException(status_code=400, detail="Invalid OTP")
+            
+        # Check expiration (e.g., 10 mins)
+        if datetime.utcnow() - record.created_at > timedelta(minutes=10):
+            raise HTTPException(status_code=400, detail="OTP expired")
+            
+        record.is_used = True
+        db.commit()
     
     # Create User
     db_user = crud.get_user_by_email(db, user_in.email)
