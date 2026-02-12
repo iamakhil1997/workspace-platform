@@ -20,7 +20,11 @@ export default function Register() {
         setError(null);
         setLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/v1/auth/send-otp`, {
+            // Hardcoded production URL as requested to resolve connection issues
+            const API_URL = "https://workspace-platform-3.onrender.com";
+            // const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+            const res = await fetch(`${API_URL}/api/v1/auth/send-otp`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email }),
@@ -42,7 +46,11 @@ export default function Register() {
         setError(null);
         setLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/v1/auth/register`, {
+            // Hardcoded production URL
+            const API_URL = "https://workspace-platform-3.onrender.com";
+            // const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+            const res = await fetch(`${API_URL}/api/v1/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password, full_name: fullName, code: otp, role }),
