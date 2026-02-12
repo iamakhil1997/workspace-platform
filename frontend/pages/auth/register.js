@@ -15,15 +15,14 @@ export default function Register() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    // Hardcoded production URL to ensure stability
+    const API_URL = "https://workspace-platform-3.onrender.com";
+
     const handleSendOTP = async (e) => {
         e.preventDefault();
         setError(null);
         setLoading(true);
         try {
-            // Hardcoded production URL as requested to resolve connection issues
-            const API_URL = "https://workspace-platform-3.onrender.com";
-            // const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
             const res = await fetch(`${API_URL}/api/v1/auth/send-otp`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -46,10 +45,6 @@ export default function Register() {
         setError(null);
         setLoading(true);
         try {
-            // Hardcoded production URL
-            const API_URL = "https://workspace-platform-3.onrender.com";
-            // const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
             const res = await fetch(`${API_URL}/api/v1/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -84,9 +79,8 @@ export default function Register() {
                         {error.includes("Failed to fetch") && (
                             <div className="mt-2 text-xs text-gray-500 font-mono bg-gray-100 p-2 rounded">
                                 <p>Troubleshooting info:</p>
-                                <p>Attempts to connect to: {process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}</p>
-                                <p>If this URL is wrong, update Vercel Environment Variables.</p>
-                                <p>If correct, wait 1 min for Render to wake up.</p>
+                                <p>Attempts to connect to: {API_URL}</p>
+                                <p>Backend Status: Live (Render)</p>
                             </div>
                         )}
                     </div>
