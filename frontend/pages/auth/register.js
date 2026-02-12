@@ -72,7 +72,15 @@ export default function Register() {
 
                 {error && (
                     <div className="mb-6 rounded-lg bg-red-50 p-4 text-sm text-red-600 border border-red-100">
-                        {error}
+                        <p className="font-bold">Error: {error}</p>
+                        {error.includes("Failed to fetch") && (
+                            <div className="mt-2 text-xs text-gray-500 font-mono bg-gray-100 p-2 rounded">
+                                <p>Troubleshooting info:</p>
+                                <p>Attempts to connect to: {process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}</p>
+                                <p>If this URL is wrong, update Vercel Environment Variables.</p>
+                                <p>If correct, wait 1 min for Render to wake up.</p>
+                            </div>
+                        )}
                     </div>
                 )}
 
